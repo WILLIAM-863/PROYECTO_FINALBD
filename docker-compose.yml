@@ -1,0 +1,35 @@
+﻿services:
+  db:
+    image: postgres:16
+    container_name: ph_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ph
+      POSTGRES_USER: ph_admin
+      POSTGRES_PASSWORD: ph_admin_2026
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d
+
+  app:
+    build:
+      context: ./app
+    container_name: ph_app
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ph
+      DB_USER: ph_admin
+      DB_PASSWORD: ph_admin_2026
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

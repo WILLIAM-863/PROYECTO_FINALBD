@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Mirador Central Operativa</title>
+  <link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Panel Operativo - Conjunto Residencial Mirador Central</h1>
+      <p id="actor-label">Sesion activa</p>
+      <button id="logout-btn" class="alt-btn" type="button" style="max-width:220px;">Cerrar sesion</button>
+      <div id="msg"></div>
+    </div>
+
+    <div id="admin-section" class="two hidden">
+      <div class="card">
+        <div id="catalogo-create-section">
+          <h2>Catalogo Base</h2>
+          <form id="form-torre" class="mini-form"><input type="text" name="nombre" placeholder="Torre C" required/><button type="submit">Registrar Torre</button></form>
+          <form id="form-unidad" class="mini-form"><div class="grid"><div><input type="text" name="torre" placeholder="Torre A" required/></div><div><input type="text" name="numero" placeholder="103" required/></div><div><input type="number" step="0.01" name="area_m2" placeholder="60.5"/></div><div><select name="estado_ocupacion" required><option value="OCUPADA">OCUPADA</option><option value="DISPONIBLE">DISPONIBLE</option></select></div><div><button type="submit">Registrar Unidad</button></div></div></form>
+          <form id="form-espacio" class="mini-form"><div class="grid"><div><input type="text" name="nombre" placeholder="Gimnasio" required/></div><div><input type="text" name="tipo" placeholder="GIMNASIO" required/></div><div><input type="number" name="aforo_maximo" min="1" placeholder="25" required/></div><div><button class="alt-btn" type="submit">Registrar Espacio</button></div></div></form>
+        </div>
+        <div id="catalogo-read-section">
+          <h2>Catalogo</h2>
+          <table><thead><tr><th>Tipo</th><th>Dato</th><th>Accion</th></tr></thead><tbody id="catalogo-crud-body"></tbody></table>
+        </div>
+      </div>
+      <div class="card">
+        <div id="residentes-create-section">
+          <h2>Gestion Residentes</h2>
+          <form id="form-residente" class="mini-form"><div class="grid"><div><input type="text" name="nombre_completo" placeholder="Nombre completo" required/></div><div><input type="text" name="documento" placeholder="CC123" required/></div><div><input type="text" name="telefono" placeholder="300..."/></div><div><input type="email" name="email" placeholder="correo@ejemplo.com"/></div><div><button type="submit">Registrar Residente</button></div></div></form>
+          <form id="form-vinculo" class="mini-form"><div class="grid"><div><select id="vinculo_unidad_id" name="unidad_id" required></select></div><div><select id="vinculo_residente_id" name="residente_id" required></select></div><div><input type="text" name="rol_tenencia" placeholder="PROPIETARIO" required/></div><div><input type="date" name="fecha_inicio" required/></div><div><input type="date" name="fecha_fin"/></div><div><button type="submit">Crear Vinculo</button></div></div></form>
+        </div>
+        <div id="residentes-read-section">
+          <h2>Residentes</h2>
+          <table><thead><tr><th>ID</th><th>Nombre</th><th>Documento</th><th>Accion</th></tr></thead><tbody id="residentes-crud-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div id="reserva-section" class="card hidden">
+      <h2>Nueva Reserva</h2>
+      <form id="form-reserva"><div class="grid"><div><label>Espacio</label><select id="espacio_id" name="espacio_id" required></select></div><div><label>Unidad</label><select id="unidad_id" name="unidad_id" required></select></div><div><label>Residente</label><select id="residente_id" name="residente_id" required></select></div><div><label>Inicio</label><input type="datetime-local" name="fecha_inicio" required/></div><div><label>Fin</label><input type="datetime-local" name="fecha_fin" required/></div><div><label>&nbsp;</label><button type="submit">Crear Reserva</button></div></div></form>
+    </div>
+
+    <div id="pqrs-section" class="card hidden">
+      <h2>Nueva PQRS</h2>
+      <form id="form-pqrs"><div class="grid"><div><label>Unidad</label><select id="pqrs_unidad_id" name="unidad_id" required></select></div><div><label>Residente</label><select id="pqrs_residente_id" name="residente_id" required></select></div><div><label>Estado inicial</label><select id="estado_pqrs_id" name="estado_pqrs_id" required></select></div><div class="full"><label>Asunto</label><input type="text" name="asunto" maxlength="120" required/></div><div class="full"><label>Descripcion</label><textarea name="descripcion" rows="4" required></textarea></div><div><button class="alt-btn" type="submit">Registrar PQRS</button></div></div></form>
+    </div>
+
+    <div id="reserva-read-section" class="card">
+      <h2>Vista de Reservas</h2>
+      <table><thead><tr><th>ID</th><th>Espacio</th><th>Unidad</th><th>Residente</th><th>Inicio</th><th>Fin</th><th>Estado</th><th>Accion</th></tr></thead><tbody id="reservas-body"></tbody></table>
+    </div>
+
+    <div id="pqrs-read-section" class="card">
+      <h2>Vista de PQRS</h2>
+      <table><thead><tr><th>ID</th><th>Unidad</th><th>Residente</th><th>Estado</th><th>Asunto</th><th>Fecha</th><th>Accion</th></tr></thead><tbody id="pqrs-body"></tbody></table>
+    </div>
+
+    <div id="bitacora-section" class="card hidden">
+      <h2>Bitacora de Acceso</h2>
+      <form id="form-bitacora" class="mini-form" data-create-bitacora>
+        <div class="grid">
+          <div><label>Unidad</label><select id="bitacora_unidad_id" name="unidad_id"></select></div>
+          <div><label>Residente</label><select id="bitacora_residente_id" name="residente_id"></select></div>
+          <div><label>Visitante</label><input type="text" name="visitante_nombre" required/></div>
+          <div><label>Documento</label><input type="text" name="documento_visitante"/></div>
+          <div><label>Movimiento</label><select name="tipo_movimiento" required><option value="INGRESO">INGRESO</option><option value="SALIDA">SALIDA</option></select></div>
+          <div class="full"><label>Observacion</label><input type="text" name="observacion"/></div>
+          <div><button type="submit">Registrar Evento</button></div>
+        </div>
+      </form>
+      <table><thead><tr><th>ID</th><th>Unidad</th><th>Residente</th><th>Visitante</th><th>Documento</th><th>Movimiento</th><th>Fecha</th><th>Accion</th></tr></thead><tbody id="bitacora-body"></tbody></table>
+    </div>
+  </div>
+
+  <div id="edit-modal" class="modal hidden">
+    <div class="modal-card">
+      <h2 id="edit-modal-title">Editar</h2>
+      <form id="edit-modal-form" class="grid">
+        <input type="hidden" id="edit-type"/>
+        <input type="hidden" id="edit-id"/>
+
+        <div id="field-reserva-inicio" class="full hidden">
+          <label>Inicio</label>
+          <input type="datetime-local" id="edit-reserva-inicio"/>
+        </div>
+        <div id="field-reserva-fin" class="full hidden">
+          <label>Fin</label>
+          <input type="datetime-local" id="edit-reserva-fin"/>
+        </div>
+        <div id="field-reserva-estado" class="full hidden">
+          <label>Estado</label>
+          <select id="edit-reserva-estado">
+            <option value="ACTIVA">ACTIVA</option>
+            <option value="APROBADA">APROBADA</option>
+            <option value="CANCELADA">CANCELADA</option>
+          </select>
+        </div>
+
+        <div id="field-pqrs-estado" class="full hidden">
+          <label>Estado PQRS</label>
+          <select id="edit-pqrs-estado-id">
+            <option value="1">ABIERTA</option>
+            <option value="2">EN_REVISION</option>
+            <option value="3">CERRADA</option>
+          </select>
+        </div>
+        <div id="field-pqrs-asunto" class="full hidden">
+          <label>Asunto</label>
+          <input type="text" id="edit-pqrs-asunto" maxlength="120"/>
+        </div>
+        <div id="field-pqrs-descripcion" class="full hidden">
+          <label>Descripcion</label>
+          <textarea id="edit-pqrs-descripcion" rows="4"></textarea>
+        </div>
+
+        <div id="field-torre-nombre" class="full hidden">
+          <label>Nombre de torre</label>
+          <input type="text" id="edit-torre-nombre"/>
+        </div>
+
+        <div id="field-unidad-torre" class="full hidden">
+          <label>Torre</label>
+          <input type="text" id="edit-unidad-torre"/>
+        </div>
+        <div id="field-unidad-numero" class="full hidden">
+          <label>Numero</label>
+          <input type="text" id="edit-unidad-numero"/>
+        </div>
+        <div id="field-unidad-area" class="full hidden">
+          <label>Area m2</label>
+          <input type="number" step="0.01" id="edit-unidad-area"/>
+        </div>
+        <div id="field-unidad-estado" class="full hidden">
+          <label>Estado ocupacion</label>
+          <select id="edit-unidad-estado">
+            <option value="OCUPADA">OCUPADA</option>
+            <option value="DISPONIBLE">DISPONIBLE</option>
+          </select>
+        </div>
+
+        <div id="field-espacio-nombre" class="full hidden">
+          <label>Nombre espacio</label>
+          <input type="text" id="edit-espacio-nombre"/>
+        </div>
+        <div id="field-espacio-tipo" class="full hidden">
+          <label>Tipo</label>
+          <input type="text" id="edit-espacio-tipo"/>
+        </div>
+        <div id="field-espacio-aforo" class="full hidden">
+          <label>Aforo maximo</label>
+          <input type="number" min="1" id="edit-espacio-aforo"/>
+        </div>
+        <div id="field-espacio-activo" class="full hidden">
+          <label>Activo</label>
+          <select id="edit-espacio-activo">
+            <option value="true">Si</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+
+        <div id="field-residente-nombre" class="full hidden">
+          <label>Nombre completo</label>
+          <input type="text" id="edit-residente-nombre"/>
+        </div>
+        <div id="field-residente-documento" class="full hidden">
+          <label>Documento</label>
+          <input type="text" id="edit-residente-documento"/>
+        </div>
+        <div id="field-residente-telefono" class="full hidden">
+          <label>Telefono</label>
+          <input type="text" id="edit-residente-telefono"/>
+        </div>
+        <div id="field-residente-email" class="full hidden">
+          <label>Email</label>
+          <input type="email" id="edit-residente-email"/>
+        </div>
+        <div id="field-residente-activo" class="full hidden">
+          <label>Activo</label>
+          <select id="edit-residente-activo">
+            <option value="true">Si</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+
+        <div><button type="submit">Guardar Cambios</button></div>
+        <div><button type="button" id="edit-modal-close" class="alt-btn">Cancelar</button></div>
+      </form>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

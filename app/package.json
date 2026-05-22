@@ -1,0 +1,13 @@
+﻿{
+  "name": "miniapp-propiedad-horizontal",
+  "version": "1.0.0",
+  "description": "Miniaplicacion de reservas para propiedad horizontal",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.13.1"
+  }
+}
