@@ -1,5 +1,10 @@
-﻿node_modules/
+node_modules/
 .env
 *.log
 .DS_Store
 Thumbs.db
+
+# Excluir entregables y skill local del repo publico
+docs/
+skill-propiedad-horizontal/
+proyecto_abp_propiedad_horizontal_2026-1 v2.pdf
